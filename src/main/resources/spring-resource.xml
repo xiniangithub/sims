@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 开启控制反转注解的支持 -->
+	<context:component-scan base-package="com.wez.sims">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<!-- 加载数据库配置文件 -->
+	<!-- <context:property-placeholder location="classpath:jdbc.properties" file-encoding="utf-8" /> -->
+	
+	<!-- 配置数据源 -->
+	<!-- <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${oracle.driver}"></property>
+		<property name="url" value="${oracle.url}"></property>
+		<property name="username" value="${oracle.username}"></property>
+		<property name="password" value="${oracle.password}"></property>
+		<property name="maxActive" value="${maxActive}"></property>
+		<property name="maxWait" value="${maxWait}"></property>
+	</bean> -->
+	
+	<!-- 配置数据源操作模板类 -->
+	<!-- <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean> -->
+	
+	<!-- 配置事务管理器 -->
+	<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean> -->
+	
+	<!-- 开启事务注解的支持 -->
+	<!-- <tx:annotation-driven /> -->
+	
+</beans>
