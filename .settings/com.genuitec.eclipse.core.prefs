@@ -1,3 +1,3 @@
 eclipse.preferences.version=1
-validator.Checked=src/main/webapp/WEB-INF/pages/MyJsp.jsp,src/main/webapp/WEB-INF/pages/index.jsp
+validator.Checked=src
 validator.Unchecked=

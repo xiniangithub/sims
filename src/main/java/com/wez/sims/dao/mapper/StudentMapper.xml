@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wez.sims.dao.StudentDao">
+
+	<select id="queryStuForList" resultType="student">
+		select * from t_student
+	</select>
+	
+	<select id="queryStuForId" resultType="student">
+		select * from t_student
+		where stuId = #{stuId}
+	</select>
+
+	<insert id="saveStudent">
+		insert into t_student (stuName, gender, birthday, tel, email)
+		value(#{stuName}, #{gender}, #{birthday}, #{tel}, #{email})
+	</insert>
+	
+	<update id="modifyStudent">
+		update t_student set stuName=#{stuName}, gender=#{gender}, 
+		birthday=#{birthday}, tel=#{tel}, email=#{email}
+		where stuId = #{stuId}
+	</update>
+	
+	<delete id="removeStudent">
+		delete from t_student
+		where stuId = #{stuId}
+	</delete>
+
+</mapper>

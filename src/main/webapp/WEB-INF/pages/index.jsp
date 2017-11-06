@@ -1,9 +1,9 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
-
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -11,14 +11,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>异清轩博客管理系统</title>
+<title>学生管理系统</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/bootstrap-table.min.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/style.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/font-awesome.min.css">
 <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath }/images/icon/icon.png">
 <link rel="shortcut icon" href="${pageContext.request.contextPath }/images/icon/favicon.ico">
 <script src="${pageContext.request.contextPath }/js/jquery-2.1.4.min.js"></script>
-<script src="${pageContext.request.contextPath }/js/bootstrap.min.js"></script> 
+<script src="${pageContext.request.contextPath }/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath }/js/bootstrap-table.min.js"></script>
+<script src="${pageContext.request.contextPath }/js/bootstrap-table-zh-CN.min.js"></script>
 <script src="${pageContext.request.contextPath }/js/admin-scripts.js"></script>
 <script type="text/javascript">
 	//是否确认删除
@@ -41,14 +44,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			};
 		});   
 	});
+	
+	/* 导航列表显示 */
 	function showContent(str) {
 		if(str == 'index') {
 			$('#index_content').show();
-			$('#list_content').hide();
+			$('#stu_list_content').hide();
+			$('#course_list_content').hide();
+			$('#selectCourse_list_content').hide();
+			return ;
 		}
-		if(str == 'list') {
+		if(str == 'stuList') {
 			$('#index_content').hide();
-			$('#list_content').show();
+			$('#stu_list_content').show();
+			$('#course_list_content').hide();
+			$('#selectCourse_list_content').hide();
+			return ;
+		}
+		if(str == 'courseList') {
+			$('#index_content').hide();
+			$('#stu_list_content').hide();
+			$('#course_list_content').show();
+			$('#selectCourse_list_content').hide();
+			return ;
+		}
+		if(str == 'selectCourseList') {
+			$('#index_content').hide();
+			$('#stu_list_content').hide();
+			$('#course_list_content').hide();
+			$('#selectCourse_list_content').show();
+			return ;
 		}
 	}
 </script>
@@ -61,7 +86,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-					<a class="navbar-brand" href="/">SIMS管理系统</a>
+					<a class="navbar-brand" href="/">学生管理系统</a>
 				</div>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav navbar-right">
@@ -91,7 +116,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<li class="active"><a href="javascript:void(0)" onclick="showContent('index')">首页</a></li>
 			</ul>
 			<ul class="nav nav-sidebar">
-				<li><a class="nav-options" href="javascript:void(0)" onclick="showContent('list')">列表</a></li>
+				<li><a class="nav-options" href="javascript:void(0)" onclick="showContent('stuList')">学生列表</a></li>
+				<li><a class="nav-options" href="javascript:void(0)" onclick="showContent('courseList')">课程列表</a></li>
+				<li><a class="nav-options" href="javascript:void(0)" onclick="showContent('selectCourseList')">选课列表</a></li>
 			</ul>
 		</aside>
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
@@ -100,104 +127,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<h1 class="page-header">信息总览</h1>
 				<div class="row placeholders">
 					<div class="col-xs-6 col-sm-3 placeholder">
-						<h4>文章</h4>
-						<span class="text-muted">0 条</span>
+						<h4>学生人数</h4>
+						<span class="text-muted">${fn:length(stuList)} 人</span>
 					</div>
 					<div class="col-xs-6 col-sm-3 placeholder">
-						<h4>评论</h4>
-						<span class="text-muted">0 条</span>
+						<h4>课程数</h4>
+						<span class="text-muted">${fn:length(courseList)} 门</span>
 					</div>
 					<div class="col-xs-6 col-sm-3 placeholder">
-						<h4>友链</h4>
-						<span class="text-muted">0 条</span>
-					</div>
-					<div class="col-xs-6 col-sm-3 placeholder">
-						<h4>访问量</h4>
-						<span class="text-muted">0</span>
+						<h4>选课数量</h4>
+						<span class="text-muted">${fn:length(selectCourseList)} 个</span>
 					</div>
 				</div>
 			</div>
 			
-			<!-- 列表页内容 -->
-			<div id="list_content" style="display:none">
-				<form action="/Article/checkAll" method="post" >
-					<h1 class="page-header">操作</h1>
-					<ol class="breadcrumb">
-						<li>
-							<a data-toggle="modal" data-target="#addStuInfo">增加文章</a>
-						</li>
-					</ol>
-					<h1 class="page-header">管理 <span class="badge">7</span></h1>
-					<div class="table-responsive">
-						<table class="table table-striped table-hover">
-							<thead>
-								<tr>
-									<th>
-										<span class="glyphicon glyphicon-th-large"></span>
-									 	<span class="visible-lg">选择</span>
-									</th>
-									<th>
-										<span class="glyphicon glyphicon-file"></span>
-										<span class="visible-lg">标题</span>
-									</th>
-									<th>
-										<span class="glyphicon glyphicon-list"></span>
-										<span class="visible-lg">栏目</span>
-									</th>
-									<th class="hidden-sm">
-										<span class="glyphicon glyphicon-tag"></span>
-										<span class="visible-lg">标签</span>
-									</th>
-									<th class="hidden-sm">
-										<span class="glyphicon glyphicon-comment"></span>
-										<span class="visible-lg">评论</span>
-									</th>
-									<th>
-										<span class="glyphicon glyphicon-time"></span>
-										<span class="visible-lg">日期</span>
-									</th>
-									<th>
-										<span class="glyphicon glyphicon-pencil"></span>
-										<span class="visible-lg">操作</span>
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><input type="checkbox" class="input-control" name="checkbox[]" value="" /></td>
-									<td class="article-title">这是测试的文章标题这是测试的文章标题这是测试的文章标题这是测试的文章标题</td>
-									<td>这个是栏目</td>
-									<td class="hidden-sm">PHP、JavaScript</td>
-									<td class="hidden-sm">0</td>
-									<td>2015-12-03</td>
-									<td><a href="update-article.html">修改</a> <a rel="6">删除</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<footer class="message_footer">
-						<nav>
-							<div class="btn-toolbar operation" role="toolbar">
-								<div class="btn-group" role="group">
-									<a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a>
-								</div>
-								<div class="btn-group" role="group">
-									<button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>
-								</div>
-							</div>
-							<ul class="pagination pagenav">
-								<li class="disabled"><a aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
-								<li class="active"><a href="#">1</a></li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#">5</a></li>
-								<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
-							</ul>
-						</nav>
-       				</footer>
-				</form>
-			</div>
+			<!-- 学生列表页内容 -->
+			<jsp:include page="stuList.jsp"></jsp:include>
+			
+			<!-- 课程列表页内容 -->
+			<jsp:include page="courseList.jsp"></jsp:include>
+			
+			<!-- 选课列表页内容 -->
+			<jsp:include page="selectCourseList.jsp"></jsp:include>
 		</div>
 	</div>
 </section>
@@ -278,49 +229,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<button type="button" class="btn btn-default" data-dismiss="modal">朕已阅</button>
 			</div>
 		</div>
-	</div>
-</div>
-<!--添加信息模态框-->
-<div class="modal fade" id="addStuInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog" role="document">
-		<form action="" method="post">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" >添加学生</h4>
-				</div>
-				<div class="modal-body">
-					<table class="table" style="margin-bottom:0px;">
-						<tbody>
-							<tr>
-								<td wdith="20%">姓名:</td>
-								<td width="80%"><input type="text" value="王雨" class="form-control" name="truename" maxlength="10" autocomplete="off" /></td>
-							</tr>
-							<tr>
-								<td wdith="20%">性别:</td>
-								<td width="80%"><input type="text" value="admin" class="form-control" name="username" maxlength="10" autocomplete="off" /></td>
-							</tr>
-							<tr>
-								<td wdith="20%">出生日期:</td>
-								<td width="80%"><input type="password" class="form-control" name="password" maxlength="18" autocomplete="off" /></td>
-							</tr>
-							<tr>
-								<td wdith="20%">邮箱:</td>
-								<td width="80%"><input type="text" value="18538078281" class="form-control" name="usertel" maxlength="13" autocomplete="off" /></td>
-							</tr>
-							<tr>
-								<td wdith="20%">电话:</td>
-								<td width="80%"><input type="password" class="form-control" name="old_password" maxlength="18" autocomplete="off" /></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="submit" class="btn btn-primary">提交</button>
-				</div>
-			</div>
-		</form>
 	</div>
 </div>
 </body>

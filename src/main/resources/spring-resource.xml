@@ -22,29 +22,40 @@
 	</context:component-scan>
 	
 	<!-- 加载数据库配置文件 -->
-	<!-- <context:property-placeholder location="classpath:jdbc.properties" file-encoding="utf-8" /> -->
+	<context:property-placeholder location="classpath:jdbc.properties" file-encoding="utf-8" />
 	
 	<!-- 配置数据源 -->
-	<!-- <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
-		<property name="driverClassName" value="${oracle.driver}"></property>
-		<property name="url" value="${oracle.url}"></property>
-		<property name="username" value="${oracle.username}"></property>
-		<property name="password" value="${oracle.password}"></property>
-		<property name="maxActive" value="${maxActive}"></property>
-		<property name="maxWait" value="${maxWait}"></property>
-	</bean> -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${mysql.driverClassName}"></property>
+		<property name="url" value="${mysql.url}"></property>
+		<property name="username" value="${mysql.username}"></property>
+		<property name="password" value="${mysql.password}"></property>
+		<!-- <property name="maxActive" value="${maxActive}"></property>
+		<property name="maxWait" value="${maxWait}"></property> -->
+	</bean>
 	
-	<!-- 配置数据源操作模板类 -->
-	<!-- <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dataSource"></property>
-	</bean> -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 配置数据源（也可以在mybatis配置文件中配置） -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置mybatis配置文件（没有可以不用配置） -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 整合mybatis的映射文件 -->
+		<property name="mapperLocations" value="classpath:com/wez/sims/dao/mapper/*.xml" />
+	</bean>
+	
+	<!-- 扫描映射接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描的包 -->
+		<property name="basePackage" value="com.wez.sims.dao" />
+		<!-- 注入SqlSessionFactory -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
 	
 	<!-- 配置事务管理器 -->
-	<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
-	</bean> -->
+	</bean>
 	
-	<!-- 开启事务注解的支持 -->
-	<!-- <tx:annotation-driven /> -->
-	
+	<!-- 事务管理 -->
+	<import resource="spring-tx.xml"/>
 </beans>

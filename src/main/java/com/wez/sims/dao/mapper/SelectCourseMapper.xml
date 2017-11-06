@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wez.sims.dao.SelectCourseDao">
+
+	<!-- 查询所有选课 -->
+	<select id="queryStuSelectCourseForList" resultType="map">
+		select stu.stuId, stu.stuName, course.courseId, course.courseName
+		from t_student as stu
+		join t_select_course as sc
+		on stu.stuId = sc.stuId
+		join t_course as course
+		on sc.courseId = course.courseId
+	</select>
+	
+	<!-- 根据学号查询该学生的选课记录 -->
+	<select id="queryStuSelectCourseForStuId" resultType="map">
+		select stu.stuId, stu.stuName, course.courseId, course.courseName
+		from t_student as stu
+		join t_select_course as sc
+		on stu.stuId = sc.stuId
+		join t_course as course
+		on sc.courseId = course.courseId
+		where stu.stuId = #{stuId}
+	</select>
+
+	<!-- 添加选课 -->
+	<insert id="saveSelectCourse">
+		insert into t_select_course (stuId, courseId)
+		values 
+		<foreach collection="courseIds" item="courseId" separator=",">
+    	    (#{stuId}, #{courseId})
+	    </foreach>
+	</insert>
+	
+	<!-- 删除选课 -->
+	<delete id="removeSelectCourse">
+		delete from t_select_course
+		where stuId = #{stuId} and courseId = #{courseId}
+	</delete>
+
+</mapper>
